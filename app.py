@@ -179,7 +179,7 @@ elif app_mode == "Riwayat Deteksi":
         for ikan, jumlah in sorted_stats.items():
             st.write(f"**{ikan}**: {jumlah} kali terdeteksi")
 
-        if st.button("🔄 Reset Statistik"):
+        if st.button("🔄 Reset Deteksi"):
             save_statistics({})
             st.success("Statistik berhasil direset.")
     else:
