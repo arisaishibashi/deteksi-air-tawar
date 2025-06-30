@@ -183,7 +183,7 @@ elif app_mode == "Riwayat Deteksi":
             save_statistics({})
             st.success("Statistik berhasil direset.")
     else:
-        st.info("Anda belum melakukan deteksi gambar jenis ikan air.")
+        st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
 
 # Halaman Fish Recognition
 elif app_mode == "Fish Recognition":
