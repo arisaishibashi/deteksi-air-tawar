@@ -27,6 +27,7 @@ def set_background(main_bg_file, sidebar_bg_file):
             background-repeat: no-repeat;
             background-attachment: fixed;
         }}
+        
         [data-testid="stSidebar"] > div:first-child {{
             background-image: url("data:image/png;base64,{sidebar_bg}");
             background-position: center; 
@@ -37,56 +38,6 @@ def set_background(main_bg_file, sidebar_bg_file):
     """, unsafe_allow_html=True)
 
 set_background("image/background.png", "image/sidebar.png")
-
-# --- Tambahkan CSS Responsive ---
-st.markdown("""
-    <style>
-    /* Default font besar di desktop */
-    h1, h2, h3, h4, h5, h6 {
-        font-size: 2.2rem;
-        color: #1a2444;
-    }
-    p, li, div, .stMarkdown, .stText, .st-bv, .st-cw {
-        font-size: 1.23rem;
-        color: #1a2444;
-    }
-    /* Responsive untuk layar kecil (mobile & tablet) */
-    @media (max-width: 600px) {
-        .stApp {
-            background-attachment: scroll !important;
-            background-size: cover !important;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-size: 1.15rem !important;
-        }
-        p, li, div, .stMarkdown, .stText, .st-bv, .st-cw {
-            font-size: 0.98rem !important;
-        }
-        .block-container {
-            padding-left: 0.2rem !important;
-            padding-right: 0.2rem !important;
-            width: 100vw !important;
-            min-width: 0 !important;
-        }
-        img {
-            max-width: 100% !important;
-            height: auto !important;
-        }
-    }
-    /* Supaya sidebar menu lebih jelas */
-    .stSelectbox label, .stSidebar {
-        font-size: 1.1rem !important;
-        color: #23304c !important;
-    }
-    /* Hilangkan bayangan background jika di mobile ingin lebih jelas */
-    @media (max-width: 600px) {
-        .stApp {
-            background-image: none !important;
-            background-color: #ffffff !important;
-        }
-    }
-    </style>
-""", unsafe_allow_html=True)
 
 # Load model CNN
 def load_model():
@@ -228,11 +179,11 @@ elif app_mode == "Riwayat Deteksi":
         for ikan, jumlah in sorted_stats.items():
             st.write(f"**{ikan}**: {jumlah} kali terdeteksi")
 
-        if st.button("🔄 Reset Deteksi"):
+        if st.button("🔄 Reset Statistik"):
             save_statistics({})
             st.success("Statistik berhasil direset.")
     else:
-        st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
+        st.info("Anda belum melakukan deteksi gambar jenis ikan air.")
 
 # Halaman Fish Recognition
 elif app_mode == "Fish Recognition":
