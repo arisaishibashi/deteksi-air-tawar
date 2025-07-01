@@ -16,7 +16,6 @@ def get_base64(file_path):
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-
 def set_background(main_bg_file, sidebar_bg_file):
     main_bg = get_base64(main_bg_file)
     sidebar_bg = get_base64(sidebar_bg_file)
@@ -28,7 +27,6 @@ def set_background(main_bg_file, sidebar_bg_file):
             background-repeat: no-repeat;
             background-attachment: fixed;
         }}
-        
         [data-testid="stSidebar"] > div:first-child {{
             background-image: url("data:image/png;base64,{sidebar_bg}");
             background-position: center; 
@@ -40,12 +38,43 @@ def set_background(main_bg_file, sidebar_bg_file):
 
 set_background("image/background.png", "image/sidebar.png")
 
+# === PAKSA LIGHT MODE (override dark mode OS/device) ===
+st.markdown("""
+    <style>
+    /* Paksa background terang di semua device */
+    html, body, .stApp, .block-container, .css-18e3th9, .st-cw, .st-cx, .st-bv, .st-cz {
+        background-color: #fff !important;
+        color: #1a2444 !important;
+    }
+    .stSidebar, .css-1d391kg, .stSelectbox > div, .css-1wa3eu0-placeholder, .css-1dimb5e-singleValue, 
+    .css-1okebmr-indicatorSeparator, .css-tlfecz-indicatorContainer, .css-1wy0on6, .st-bx {
+        background-color: #fff !important;
+        color: #1a2444 !important;
+    }
+    .stTable, .stDataFrame, .stFileUploader > div {
+        background-color: #fff !important;
+        color: #1a2444 !important;
+    }
+    .css-11unzgr, .css-1n76uvr, .css-14el2xx {
+        background-color: #fff !important;
+        color: #1a2444 !important;
+    }
+    label, .stRadio label {
+        color: #1a2444 !important;
+        font-size: 1.08rem;
+    }
+    html, body {
+        color-scheme: light !important;
+        background: #fff !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Load model CNN
 def load_model():
     return tf.keras.models.load_model("model_paling_baru.h5")
 
 model = load_model()
-
 
 # Prediksi
 def model_prediction(image_data):
@@ -104,7 +133,6 @@ def save_statistics(stats):
     except Exception as e:
         st.error(f"Gagal menyimpan statistik: {e}")
 
-
 def update_statistics(ikan_nama):
     stats = load_statistics()
     stats[ikan_nama] = stats.get(ikan_nama, 0) + 1
@@ -114,11 +142,9 @@ def update_statistics(ikan_nama):
 st.sidebar.title("Menu")
 app_mode = st.sidebar.selectbox("Pilih Halaman", ["Home", "Informasi Web", "Riwayat Deteksi", "Fish Recognition"])
 
-
 # Halaman Home
 if app_mode == "Home":
     st.image("image/judul.png", use_column_width=True)
-
     st.markdown("""
     <div style="
         position: relative;
@@ -148,7 +174,6 @@ if app_mode == "Home":
     </div>
     """, unsafe_allow_html=True)
 
-
 # Halaman About
 elif app_mode == "Informasi Web":
     st.image("image/tentang_web.png", use_column_width=True)
@@ -176,8 +201,6 @@ elif app_mode == "Informasi Web":
     </div>
     """, unsafe_allow_html=True)
 
-
-
 # Halaman Statistik
 elif app_mode == "Riwayat Deteksi":
     st.image("image/riwayat_deteksi.png",  use_column_width=True)
@@ -195,7 +218,7 @@ elif app_mode == "Riwayat Deteksi":
 
         st.bar_chart(df_stats.set_index("Nama Ikan"))  # agar bar chart tetap bisa
         st.markdown("### Rincian Deteksi:")
-        st.table(df_stats)  # bisa juga st.dataframe(df_stats, use_container_width=True)
+        st.table(df_stats)  # atau bisa juga st.dataframe(df_stats, use_container_width=True)
 
         if st.button("🔄 Reset Deteksi"):
             save_statistics({})
@@ -203,13 +226,9 @@ elif app_mode == "Riwayat Deteksi":
     else:
         st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
 
-
-
 # Halaman Fish Recognition
 elif app_mode == "Fish Recognition":
-    #st.header("📷 Fish Recognition")
     st.image("image/fish_recog.png",  use_column_width=True)
-
     upload_option = st.radio("Pilih metode input gambar:", ["Unggah Gambar", "Gunakan Kamera"])
 
     if upload_option == "Unggah Gambar":
