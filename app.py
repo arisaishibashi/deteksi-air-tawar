@@ -122,7 +122,7 @@ if app_mode == "Home":
     st.markdown("""
     <div style="
         position: relative;
-        background: #acc1fe;
+        background: #71bfff;
         padding: 32px 28px 32px 28px;
         border-radius: 24px;
         box-shadow: 0 4px 24px rgba(80,80,80,0.08);
@@ -155,7 +155,7 @@ elif app_mode == "Informasi Web":
     st.markdown("""
     <div style="
         position: relative;
-        background: #acc1fe;
+        background: #71bfff;
         padding: 32px 28px 32px 28px;
         border-radius: 24px;
         box-shadow: 0 4px 24px rgba(80,80,80,0.08);
