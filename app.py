@@ -191,6 +191,7 @@ elif app_mode == "Riwayat Deteksi":
         ]
         df_stats = pd.DataFrame(list_stats)
         df_stats = df_stats.sort_values(by="Jumlah Deteksi", ascending=False).reset_index(drop=True)
+        df_stats.index = df_stats.index + 1
 
         st.bar_chart(df_stats.set_index("Nama Ikan"))  # agar bar chart tetap bisa
         st.markdown("### Rincian Deteksi:")
