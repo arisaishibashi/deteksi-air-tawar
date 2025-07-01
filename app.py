@@ -16,6 +16,7 @@ def get_base64(file_path):
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
+
 def set_background(main_bg_file, sidebar_bg_file):
     main_bg = get_base64(main_bg_file)
     sidebar_bg = get_base64(sidebar_bg_file)
@@ -116,74 +117,89 @@ app_mode = st.sidebar.selectbox("Pilih Halaman", ["Home", "Informasi Web", "Riwa
 
 # Halaman Home
 if app_mode == "Home":
-    ##st.header("🎣 DETEKSI JENIS IKAN AIR TAWAR")
     st.image("image/judul.png", use_column_width=True)
+
     st.markdown("""
-    🐟 Selamat Datang di Deteksi Ikan Air Tawar
+    <div style="
+        position: relative;
+        background: #acc1fe;
+        padding: 32px 28px 32px 28px;
+        border-radius: 24px;
+        box-shadow: 0 4px 24px rgba(80,80,80,0.08);
+        margin: 0 auto 32px auto;
+        max-width: 680px;
+        min-width: 200px;
+        ">
+        <span style="font-size:1.18rem; color:#1a2444; font-weight:500;">
+        🐟 <b>Selamat Datang di Deteksi Ikan Air Tawar</b><br><br>
+        Kenali Ikan Air Tawar dengan Mudah dan Menyenangkan! Air tawar menyimpan banyak kekayaan hayati—termasuk beragam jenis ikan yang unik dan menarik. Tapi… apakah kamu 
+        bisa membedakan ikan nila, gurame, atau lele hanya dari fotonya? Nah, di sinilah peran website ini!<br><br>
+        Kami hadir untuk membantu kamu mengenali ikan air tawar hanya dengan mengunggah gambar.<br>
+        Sistem ini menggunakan teknologi CNN (Convolutional Neural Network) yang bisa mendeteksi dan mengenali 
+        jenis ikan secara otomatis dan akurat.<br><br>
+        <b>Apa Saja yang Bisa Kamu Lakukan di Sini?:</b>
+        <ul>
+            <li>🎯 Deteksi Cepat Jenis Ikan Air Tawar</li>
+            <li>📚 Dapatkan Informasi Edukatif tentang Ikan</li>
+            <li>🧠 Belajar Sambil Praktik, Seru dan Interaktif!</li>
+        </ul>
+        Yuk, mulai eksplorasi dunia ikan air tawar bersama teknologi! Klik <b>Fish Recognition</b> dan unggah gambar ikanmu atau kamu bisa mengambil gambar ikan mu secara langsung 🎉
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
-    **Kenali Ikan Air Tawar dengan Mudah dan Menyenangkan!**
-    Air tawar menyimpan banyak kekayaan hayati—termasuk beragam jenis ikan yang unik dan menarik. Tapi… apakah kamu 
-    bisa membedakan ikan nila, gurame, atau lele hanya dari fotonya? Nah, di sinilah peran website ini!
-    
-    Kami hadir untuk membantu kamu mengenali ikan air tawar hanya dengan mengunggah gambar. 
-    Sistem ini menggunakan teknologi CNN (Convolutional Neural Network) yang bisa mendeteksi dan mengenali 
-    jenis ikan secara otomatis dan akurat.
-
-    **Apa Saja yang Bisa Kamu Lakukan di Sini?:**
-    - 🎯 Deteksi Cepat Jenis Ikan Air Tawar
-    - 📚 Dapatkan Informasi Edukatif tentang Ikan
-    - 🧠 Belajar Sambil Praktik, Seru dan Interaktif!
-
-    Yuk, mulai eksplorasi dunia ikan air tawar bersama teknologi! Klik **Fish Recognition** dan 
-    unggah gambar ikanmu atau 
-    kamu bisa mengambil gambar ikan mu secara langsung 🎉
-    """)
 
 # Halaman About
 elif app_mode == "Informasi Web":
-    #st.header("Tentang Proyek")
     st.image("image/tentang_web.png", use_column_width=True)
     st.markdown("""
-    **ℹ️ Tentang Website Ini**
-    **Mengenal Ikan Air Tawar Lewat Teknologi**
-    
-    Website ini dibuat sebagai sarana edukatif dan interaktif untuk membantu pengguna mengenali 
-    jenis-jenis ikan air tawar melalui gambar. 
-    Dengan menggabungkan ilmu biologi dan kecerdasan buatan, kami ingin mempermudah proses identifikasi ikan yang 
-    biasanya memerlukan pengetahuan khusus.
-    
-    **🎯 Tujuan Kami**
-    - Membantu pelajar, mahasiswa, dan masyarakat umum mengenal ikan air tawar dengan cara yang praktis
-    - Meningkatkan kesadaran akan keanekaragaman hayati air tawar
-    - Mendorong pemanfaatan teknologi dalam bidang perikanan dan pendidikan
-    
-    **⚙️ Teknologi yang Digunakan**
-    Website ini menggunakan **Convolutional Neural Network (CNN)**, salah satu metode dalam Deep Learning, untuk mengenali pola visual pada gambar ikan. 
-    Dengan data pelatihan yang cukup, sistem ini dapat memprediksi jenis ikan dengan tingkat akurasi yang baik.
+    <div style="
+        position: relative;
+        background: #acc1fe;
+        padding: 32px 28px 32px 28px;
+        border-radius: 24px;
+        box-shadow: 0 4px 24px rgba(80,80,80,0.08);
+        margin: 0 auto 32px auto;
+        max-width: 680px;
+        min-width: 200px;
+    ">
+        <span style="font-size:1.13rem; color:#1a2444;">
+            <b>ℹ️ Tentang Website Ini: Mengenal Ikan Air Tawar Lewat Teknologi</b><br><br>
+            Website ini dibuat sebagai sarana edukatif dan interaktif untuk membantu pengguna mengenali 
+            jenis-jenis ikan air tawar melalui gambar.<br>
+            Dengan menggabungkan ilmu biologi dan kecerdasan buatan, kami ingin mempermudah proses identifikasi ikan yang 
+            biasanya memerlukan pengetahuan khusus.<br><br>
+            <b>⚙️ Teknologi yang Digunakan</b><br>
+            Website ini menggunakan <b>Convolutional Neural Network (CNN)</b>, salah satu metode dalam Deep Learning untuk mengenali pola visual pada gambar ikan.<br>
+            Dengan data pelatihan yang cukup, sistem ini dapat memprediksi jenis ikan dengan tingkat akurasi yang baik.
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
-    
-    
-    """)
+
 
 # Halaman Statistik
 elif app_mode == "Riwayat Deteksi":
-    #st.header("📊 Statistik Deteksi Ikan")
     st.image("image/riwayat_deteksi.png",  use_column_width=True)
     stats = load_statistics()
 
     if stats:
         sorted_stats = dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
         df_stats = pd.DataFrame.from_dict(sorted_stats, orient='index', columns=['Jumlah Deteksi'])
+        df_stats.index.name = 'Nama Ikan'  # supaya nama kolom lebih jelas
+
         st.bar_chart(df_stats)
         st.markdown("### Rincian Deteksi:")
-        for ikan, jumlah in sorted_stats.items():
-            st.write(f"**{ikan}**: {jumlah} kali terdeteksi")
 
-        if st.button("🔄 Reset Statistik"):
+        # Tampilkan tabel
+        st.dataframe(df_stats, use_container_width=True)  # Atau gunakan st.table(df_stats) jika ingin tabel statis
+
+        if st.button("🔄 Reset Deteksi"):
             save_statistics({})
-            st.success("Statistik berhasil direset.")
+            st.success("Deteksi berhasil direset.")
     else:
-        st.info("Anda belum melakukan deteksi gambar jenis ikan air.")
+        st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
+
 
 # Halaman Fish Recognition
 elif app_mode == "Fish Recognition":
