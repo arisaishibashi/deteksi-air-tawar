@@ -184,21 +184,24 @@ elif app_mode == "Riwayat Deteksi":
     stats = load_statistics()
 
     if stats:
-        sorted_stats = dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
-        df_stats = pd.DataFrame.from_dict(sorted_stats, orient='index', columns=['Jumlah Deteksi'])
-        df_stats.index.name = 'Nama Ikan'  # supaya nama kolom lebih jelas
+        # Convert ke list of dict agar aman diproses DataFrame
+        list_stats = [
+            {"Nama Ikan": ikan, "Jumlah Deteksi": jumlah}
+            for ikan, jumlah in stats.items()
+        ]
+        df_stats = pd.DataFrame(list_stats)
+        df_stats = df_stats.sort_values(by="Jumlah Deteksi", ascending=False).reset_index(drop=True)
 
-        st.bar_chart(df_stats)
+        st.bar_chart(df_stats.set_index("Nama Ikan"))  # agar bar chart tetap bisa
         st.markdown("### Rincian Deteksi:")
-
-        # Tampilkan tabel
-        st.dataframe(df_stats, use_container_width=True)  # Atau gunakan st.table(df_stats) jika ingin tabel statis
+        st.table(df_stats)  # bisa juga st.dataframe(df_stats, use_container_width=True)
 
         if st.button("🔄 Reset Deteksi"):
             save_statistics({})
             st.success("Deteksi berhasil direset.")
     else:
         st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
+
 
 
 # Halaman Fish Recognition
