@@ -1,9 +1,4 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
-warnings.filterwarnings("ignore", message="numpy.dtype size changed")
-
 import base64
 import streamlit as st # type: ignore
 import tensorflow as tf # type: ignore
@@ -48,13 +43,19 @@ model = load_model()
 
 
 # Prediksi
-def model_prediction(image_data):
+def model_prediction(image_data, threshold=0.7):
     image = Image.open(image_data).convert('RGB')
     image = image.resize((224, 224))
     image_array = np.array(image) / 255.0
     image_array = np.expand_dims(image_array, axis=0)
     prediction = model.predict(image_array)
-    return np.argmax(prediction)
+    pred_index = np.argmax(prediction)
+    pred_conf = float(np.max(prediction))
+    if pred_conf < threshold:
+        return None, pred_conf  # None = bukan ikan air tawar
+    else:
+        return pred_index, pred_conf
+
 
 # Daftar nama kelas ikan
 class_name = [
@@ -132,11 +133,12 @@ if app_mode == "Home":
         ">
         <span style="font-size:1.18rem; color:#1a2444; font-weight:500;">
         🐟 <b>Selamat Datang di Deteksi Ikan Air Tawar</b><br><br>
-        Kenali Ikan Air Tawar dengan Mudah dan Menyenangkan! Air tawar menyimpan banyak kekayaan hayati—termasuk beragam jenis ikan yang unik dan menarik. Tapi… apakah kamu 
+        Kenali Ikan Air Tawar dengan Mudah dan Menyenangkan! Air tawar menyimpan banyak kekayaan hayati—termasuk 
+        beragam jenis ikan yang unik dan menarik. Tapi… apakah kamu 
         bisa membedakan ikan nila, gurame, atau lele hanya dari fotonya? Nah, di sinilah peran website ini!<br><br>
         Kami hadir untuk membantu kamu mengenali ikan air tawar hanya dengan mengunggah gambar.<br>
         Sistem ini menggunakan teknologi CNN (Convolutional Neural Network) yang bisa mendeteksi dan mengenali 
-        jenis ikan secara otomatis dan akurat.<br><br>
+        jenis ikan air tawar.<br><br>
         <b>Apa Saja yang Bisa Kamu Lakukan di Sini?:</b>
         <ul>
             <li>🎯 Deteksi Cepat Jenis Ikan Air Tawar</li>
@@ -167,10 +169,12 @@ elif app_mode == "Informasi Web":
             <b>ℹ️ Tentang Website Ini: Mengenal Ikan Air Tawar Lewat Teknologi</b><br><br>
             Website ini dibuat sebagai sarana edukatif dan interaktif untuk membantu pengguna mengenali 
             jenis-jenis ikan air tawar melalui gambar.<br>
-            Dengan menggabungkan ilmu biologi dan kecerdasan buatan, kami ingin mempermudah proses identifikasi ikan yang 
+            Dengan menggabungkan ilmu biologi dan kecerdasan buatan, kami ingin mempermudah proses identifikasi 
+            ikan yang 
             biasanya memerlukan pengetahuan khusus.<br><br>
             <b>⚙️ Teknologi yang Digunakan</b><br>
-            Website ini menggunakan <b>Convolutional Neural Network (CNN)</b>, salah satu metode dalam Deep Learning untuk mengenali pola visual pada gambar ikan.<br>
+            Website ini menggunakan <b>Convolutional Neural Network (CNN)</b>, salah satu metode dalam Deep Learning 
+            untuk mengenali pola visual pada gambar ikan.<br>
             Dengan data pelatihan yang cukup, sistem ini dapat memprediksi jenis ikan dengan tingkat akurasi yang baik.
         </span>
     </div>
@@ -207,7 +211,6 @@ elif app_mode == "Riwayat Deteksi":
 
 # Halaman Fish Recognition
 elif app_mode == "Fish Recognition":
-    #st.header("📷 Fish Recognition")
     st.image("image/fish_recog.png",  use_column_width=True)
 
     upload_option = st.radio("Pilih metode input gambar:", ["Unggah Gambar", "Gunakan Kamera"])
@@ -223,10 +226,10 @@ elif app_mode == "Fish Recognition":
         if st.button("🔍 Prediksi"):
             st.write("Sedang memproses...")
             st.snow()
-            result_index = model_prediction(test_image)
+            result, conf = model_prediction(test_image, threshold=0.7)  # threshold bisa kamu atur sendiri
 
-            if result_index < len(class_name):
-                fish_name = class_name[result_index]
+            if result is not None and result < len(class_name):
+                fish_name = class_name[result]
                 st.success(f"Model memprediksi ini adalah ikan **{fish_name}**.")
                 update_statistics(fish_name)
 
@@ -240,4 +243,4 @@ elif app_mode == "Fish Recognition":
                 else:
                     st.info("Informasi detail belum tersedia.")
             else:
-                st.error("Terjadi kesalahan prediksi.")
+                st.error("Bukan ikan air tawar atau model kami tidak mempelajari gambar ini.")
