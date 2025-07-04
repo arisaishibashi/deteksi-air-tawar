@@ -1,4 +1,9 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+
 import base64
 import streamlit as st # type: ignore
 import tensorflow as tf # type: ignore
@@ -243,4 +248,4 @@ elif app_mode == "Fish Recognition":
                 else:
                     st.info("Informasi detail belum tersedia.")
             else:
-                st.error("Bukan ikan air tawar atau model kami tidak mempelajari gambar ini.")
+                st.error("Bukan ikan air tawar atau model kami tidak mempelajari ikan ini.")
