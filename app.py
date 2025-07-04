@@ -225,7 +225,7 @@ elif app_mode == "Fish Recognition":
 
         if st.button("🔍 Prediksi"):
             st.write("Sedang memproses...")
-            st.snow()
+            st.balloons()
             result, conf = model_prediction(test_image, threshold=0.7)  # threshold bisa kamu atur sendiri
 
             if result is not None and result < len(class_name):
