@@ -48,7 +48,7 @@ model = load_model()
 
 
 # Prediksi
-def model_prediction(image_data, threshold=0.7):
+def model_prediction(image_data, threshold=0.6):
     image = Image.open(image_data).convert('RGB')
     image = image.resize((224, 224))
     image_array = np.array(image) / 255.0
@@ -231,7 +231,7 @@ elif app_mode == "Fish Recognition":
         if st.button("🔍 Prediksi"):
             st.write("Sedang memproses...")
             st.balloons()
-            result, conf = model_prediction(test_image, threshold=0.7)  # threshold bisa kamu atur sendiri
+            result, conf = model_prediction(test_image, threshold=0.6)  # threshold bisa kamu atur sendiri
 
             if result is not None and result < len(class_name):
                 fish_name = class_name[result]
