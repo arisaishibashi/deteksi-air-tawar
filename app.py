@@ -42,7 +42,7 @@ set_background("image/background.png", "image/sidebar.png")
 
 # Load model CNN
 def load_model():
-    return tf.keras.models.load_model("model_paling_baru.h5")
+    return tf.keras.models.load_model("model_paling_baru2.h5")
 
 model = load_model()
 
