@@ -239,4 +239,4 @@ elif app_mode == "Fish Recognition":
                     else:
                         st.info("Informasi detail belum tersedia.")
             else:
-                st.error("Bukan ikan air tawar atau model kami tidak mempelajari gambar ini.")
+                st.error("Model kami tidak mempelajari gambar ini. Silakan unggah gambar ikan air tawar.")
