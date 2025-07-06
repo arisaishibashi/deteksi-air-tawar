@@ -16,7 +16,6 @@ def get_base64(file_path):
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-
 def set_background(main_bg_file, sidebar_bg_file):
     main_bg = get_base64(main_bg_file)
     sidebar_bg = get_base64(sidebar_bg_file)
@@ -42,30 +41,28 @@ set_background("image/background.png", "image/sidebar.png")
 
 # Load model CNN
 def load_model():
-    return tf.keras.models.load_model("model_paling_baru.h5")
+    return tf.keras.models.load_model("model_paling_baru (2).h5")
 
 model = load_model()
 
-
 # Prediksi
-def model_prediction(image_data, threshold=0.6):
+def model_prediction(image_data, threshold=0.85):
     image = Image.open(image_data).convert('RGB')
     image = image.resize((224, 224))
     image_array = np.array(image) / 255.0
     image_array = np.expand_dims(image_array, axis=0)
     prediction = model.predict(image_array)
-    pred_index = np.argmax(prediction)
+    pred_index = int(np.argmax(prediction))
     pred_conf = float(np.max(prediction))
     if pred_conf < threshold:
-        return None, pred_conf  # None = bukan ikan air tawar
+        return None, pred_conf
     else:
         return pred_index, pred_conf
 
-
 # Daftar nama kelas ikan
 class_name = [
-    'Bandeng', 'Bawal', 'Cupang', 'Gabus', 'Gurame',
-    'Ikan Mas', 'Kakap', 'Lele', 'Mujair', 'Nila', 'Patin'
+    'Bandeng', 'Bawal', 'Cupang', 'Gabus', 'Gurame', 'Ikan Mas',
+    'Kakap', 'Lele', 'Model tidak mempelajari gambar ini', 'Nila', 'Patin'
 ]
 
 # Informasi edukatif
@@ -110,7 +107,6 @@ def save_statistics(stats):
     except Exception as e:
         st.error(f"Gagal menyimpan statistik: {e}")
 
-
 def update_statistics(ikan_nama):
     stats = load_statistics()
     stats[ikan_nama] = stats.get(ikan_nama, 0) + 1
@@ -120,11 +116,9 @@ def update_statistics(ikan_nama):
 st.sidebar.title("Menu")
 app_mode = st.sidebar.selectbox("Pilih Halaman", ["Home", "Informasi Web", "Riwayat Deteksi", "Fish Recognition"])
 
-
 # Halaman Home
 if app_mode == "Home":
     st.image("image/judul.png", use_column_width=True)
-
     st.markdown("""
     <div style="
         position: relative;
@@ -155,7 +149,6 @@ if app_mode == "Home":
     </div>
     """, unsafe_allow_html=True)
 
-
 # Halaman About
 elif app_mode == "Informasi Web":
     st.image("image/tentang_web.png", use_column_width=True)
@@ -185,15 +178,12 @@ elif app_mode == "Informasi Web":
     </div>
     """, unsafe_allow_html=True)
 
-
-
 # Halaman Statistik
 elif app_mode == "Riwayat Deteksi":
     st.image("image/riwayat_deteksi.png",  use_column_width=True)
     stats = load_statistics()
 
     if stats:
-        # Convert ke list of dict agar aman diproses DataFrame
         list_stats = [
             {"Nama Ikan": ikan, "Jumlah Deteksi": jumlah}
             for ikan, jumlah in stats.items()
@@ -202,17 +192,15 @@ elif app_mode == "Riwayat Deteksi":
         df_stats = df_stats.sort_values(by="Jumlah Deteksi", ascending=False).reset_index(drop=True)
         df_stats.index = df_stats.index + 1
 
-        st.bar_chart(df_stats.set_index("Nama Ikan"))  # agar bar chart tetap bisa
+        st.bar_chart(df_stats.set_index("Nama Ikan"))
         st.markdown("### Rincian Deteksi:")
-        st.table(df_stats)  # bisa juga st.dataframe(df_stats, use_container_width=True)
+        st.table(df_stats)
 
         if st.button("🔄 Reset Deteksi"):
             save_statistics({})
             st.success("Deteksi berhasil direset.")
     else:
         st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
-
-
 
 # Halaman Fish Recognition
 elif app_mode == "Fish Recognition":
@@ -231,21 +219,24 @@ elif app_mode == "Fish Recognition":
         if st.button("🔍 Prediksi"):
             st.write("Sedang memproses...")
             st.balloons()
-            result, conf = model_prediction(test_image, threshold=0.6)  # threshold bisa kamu atur sendiri
+            result, conf = model_prediction(test_image, threshold=0.85)
 
             if result is not None and result < len(class_name):
                 fish_name = class_name[result]
-                st.success(f"Model memprediksi ini adalah ikan **{fish_name}**.")
-                update_statistics(fish_name)
-
-                info = fish_info.get(fish_name)
-                if info:
-                    st.markdown("### ℹ️ Informasi Edukatif")
-                    st.write(f"**Nama Ilmiah:** {info['Nama Ilmiah']}")
-                    st.write(f"**Ciri-ciri:** {info['Ciri-ciri']}")
-                    st.write(f"**Habitat Asli:** {info['Habitat']}")
-                    st.write(f"**Kegunaan:** {info['Kegunaan']}")
+                if fish_name == "Model tidak mempelajari gambar ini":
+                    st.error("Model kami tidak mempelajari gambar ini. Silakan unggah gambar ikan air tawar.")
+                    update_statistics(fish_name)
                 else:
-                    st.info("Informasi detail belum tersedia.")
+                    st.success(f"Model memprediksi ini adalah ikan **{fish_name}**.")
+                    update_statistics(fish_name)
+                    info = fish_info.get(fish_name)
+                    if info:
+                        st.markdown("### ℹ️ Informasi Edukatif")
+                        st.write(f"**Nama Ilmiah:** {info['Nama Ilmiah']}")
+                        st.write(f"**Ciri-ciri:** {info['Ciri-ciri']}")
+                        st.write(f"**Habitat Asli:** {info['Habitat']}")
+                        st.write(f"**Kegunaan:** {info['Kegunaan']}")
+                    else:
+                        st.info("Informasi detail belum tersedia.")
             else:
-                st.error("Bukan ikan air tawar atau model kami tidak mempelajari ikan ini.")
+                st.error("Bukan ikan air tawar atau model kami tidak mempelajari gambar ini.")
