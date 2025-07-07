@@ -5,16 +5,17 @@ warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 
 import base64
-import streamlit as st  # type: ignore
-import tensorflow as tf  # type: ignore
-import numpy as np  # type: ignore
-from PIL import Image  # type: ignore
+import streamlit as st # type: ignore
+import tensorflow as tf # type: ignore
+import numpy as np # type: ignore
+from PIL import Image # type: ignore
 import json
-import pandas as pd  # type: ignore
+import pandas as pd # type: ignore
 
 def get_base64(file_path):
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
+
 
 def set_background(main_bg_file, sidebar_bg_file):
     main_bg = get_base64(main_bg_file)
@@ -27,6 +28,7 @@ def set_background(main_bg_file, sidebar_bg_file):
             background-repeat: no-repeat;
             background-attachment: fixed;
         }}
+        
         [data-testid="stSidebar"] > div:first-child {{
             background-image: url("data:image/png;base64,{sidebar_bg}");
             background-position: center; 
@@ -38,51 +40,33 @@ def set_background(main_bg_file, sidebar_bg_file):
 
 set_background("image/background.png", "image/sidebar.png")
 
-# Load models
-def load_model1():
-    return tf.keras.models.load_model("model_paling_baru.h5")  # model ikan air tawar
+# Load model CNN
+def load_model():
+    return tf.keras.models.load_model("model_07_juli.h5")
 
-def load_model2():
-    return tf.keras.models.load_model("model_07_juli.h5")  # model gambar lain
+model = load_model()
 
-model1 = load_model1()
-model2 = load_model2()
 
-# Label model 1 (ikan air tawar)
+# Prediksi
+def model_prediction(image_data):
+    image = Image.open(image_data).convert('RGB')
+    image = image.resize((224, 224))
+    image_array = np.array(image) / 255.0
+    image_array = np.expand_dims(image_array, axis=0)
+    prediction = model.predict(image_array)
+    confidence = np.max(prediction)
+    result_index = np.argmax(prediction)
+    return result_index, confidence
+
+
+
+# Daftar nama kelas ikan
 class_name = [
-    'Bandeng', 'Bawal', 'Cupang', 'Gabus', 'Gurame',
-    'Ikan Mas', 'Kakap', 'Lele', 'Mujair', 'Nila', 'Patin'
-]
-# Label model 2
-class_name2 = [ 
     'Bandeng', 'Bawal', 'Cupang', 'Gabus', 'Gurame',
     'Ikan Mas', 'Kakap', 'Lele', 'Model tidak mempelajari gambar ini', 'Nila', 'Patin'
 ]
 
-def model1_prediction(image_data):
-    image = Image.open(image_data).convert('RGB')
-    image = image.resize((224, 224))
-    image_array = np.array(image) / 255.0
-    image_array = np.expand_dims(image_array, axis=0)
-    prediction = model1.predict(image_array)
-    pred_index = int(np.argmax(prediction))
-    pred_conf = float(np.max(prediction))
-    return pred_index, pred_conf
-
-def model2_prediction(image_data, threshold=0.7):
-    image = Image.open(image_data).convert('RGB')
-    image = image.resize((224, 224))
-    image_array = np.array(image) / 255.0
-    image_array = np.expand_dims(image_array, axis=0)
-    prediction = model2.predict(image_array)
-    pred_index = int(np.argmax(prediction))
-    pred_conf = float(np.max(prediction))
-    if pred_conf < threshold:
-        return None, pred_conf
-    else:
-        return pred_index, pred_conf
-
-# Info ikan air tawar
+# Informasi edukatif
 fish_info = {
     'Bandeng': {'Nama Ilmiah': 'Chanos chanos', 'Ciri-ciri': 'Tubuh memanjang, sisik besar berkilau, ekor bercabang.',
                 'Habitat': 'Perairan payau dan laut dangkal.', 'Kegunaan': 'Konsumsi, budidaya tambak.'},
@@ -110,6 +94,7 @@ fish_info = {
 
 # Statistik
 STAT_FILE = "statistik_deteksi.json"
+
 def load_statistics():
     if os.path.exists(STAT_FILE):
         with open(STAT_FILE, "r") as f:
@@ -123,6 +108,7 @@ def save_statistics(stats):
     except Exception as e:
         st.error(f"Gagal menyimpan statistik: {e}")
 
+
 def update_statistics(ikan_nama):
     stats = load_statistics()
     stats[ikan_nama] = stats.get(ikan_nama, 0) + 1
@@ -132,9 +118,11 @@ def update_statistics(ikan_nama):
 st.sidebar.title("Menu")
 app_mode = st.sidebar.selectbox("Pilih Halaman", ["Home", "Informasi Web", "Riwayat Deteksi", "Fish Recognition"])
 
+
 # Halaman Home
 if app_mode == "Home":
     st.image("image/judul.png", use_column_width=True)
+
     st.markdown("""
     <div style="
         position: relative;
@@ -165,6 +153,7 @@ if app_mode == "Home":
     </div>
     """, unsafe_allow_html=True)
 
+
 # Halaman About
 elif app_mode == "Informasi Web":
     st.image("image/tentang_web.png", use_column_width=True)
@@ -194,34 +183,12 @@ elif app_mode == "Informasi Web":
     </div>
     """, unsafe_allow_html=True)
 
+
+
 # Halaman Statistik
-elif app_mode == "Riwayat Deteksi":
-    st.image("image/riwayat_deteksi.png",  use_column_width=True)
-    stats = load_statistics()
-
-    if stats:
-        # Convert ke list of dict agar aman diproses DataFrame
-        list_stats = [
-            {"Nama Ikan": ikan, "Jumlah Deteksi": jumlah}
-            for ikan, jumlah in stats.items()
-        ]
-        df_stats = pd.DataFrame(list_stats)
-        df_stats = df_stats.sort_values(by="Jumlah Deteksi", ascending=False).reset_index(drop=True)
-        df_stats.index = df_stats.index + 1
-
-        st.bar_chart(df_stats.set_index("Nama Ikan"))
-        st.markdown("### Rincian Deteksi:")
-        st.table(df_stats)
-
-        if st.button("🔄 Reset Deteksi"):
-            save_statistics({})
-            st.success("Deteksi berhasil direset.")
-    else:
-        st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
-
-# Halaman Fish Recognition
 elif app_mode == "Fish Recognition":
     st.image("image/fish_recog.png",  use_column_width=True)
+
     upload_option = st.radio("Pilih metode input gambar:", ["Unggah Gambar", "Gunakan Kamera"])
 
     if upload_option == "Unggah Gambar":
@@ -231,15 +198,20 @@ elif app_mode == "Fish Recognition":
 
     if test_image is not None:
         st.image(test_image, caption="Gambar yang Diuji", use_column_width=True)
+
         if st.button("🔍 Prediksi"):
             st.write("Sedang memproses...")
             st.balloons()
-            result1, conf1 = model1_prediction(test_image)
-            fish_name = class_name[result1]
-            THRESHOLD = 0.75
+            result_index, confidence = model_prediction(test_image)
+            fish_name = class_name[result_index]
 
-            if (fish_name in fish_info) and (conf1 > THRESHOLD):
-                st.success(f"Gambar yang diunggah adalah ikan air tawar **{fish_name}** (confidence: {conf1:.2f}).")
+            # Pastikan pengecekan string
+            if fish_name == "Model tidak mempelajari gambar ini":
+                st.error("Maaf, Gambar bukan ikan air tawar atau Model tidak mempelajari gambar ini.")
+            elif confidence <= 0.6:
+                st.error("Maaf, Gambar bukan ikan air tawar atau Model tidak mempelajari gambar ini.")
+            else:
+                st.success(f"Model memprediksi ini adalah ikan **{fish_name}**")
                 update_statistics(fish_name)
                 info = fish_info.get(fish_name)
                 if info:
@@ -250,24 +222,3 @@ elif app_mode == "Fish Recognition":
                     st.write(f"**Kegunaan:** {info['Kegunaan']}")
                 else:
                     st.info("Informasi detail belum tersedia.")
-            else:
-                # Confidence rendah/meragukan, langsung model2
-                result2, conf2 = model2_prediction(test_image, threshold=0.7)
-                if result2 is not None and result2 < len(class_name2):
-                    nonfish_name = class_name2[result2]
-                    if nonfish_name == "Model tidak mempelajari gambar ini":
-                        st.warning("Model tidak mempelajari gambar ini.")
-                        update_statistics(nonfish_name)
-                        st.info("Maaf, model kami belum mempelajari gambar ini.")
-                    else:
-                        st.warning(f"Gambar yang diunggah adalah **{nonfish_name}** (confidence: {conf2:.2f}).")
-                        update_statistics(nonfish_name)
-                        info = fish_info.get(nonfish_name)
-                        if info:
-                            st.markdown("### ℹ️ Informasi Edukatif")
-                            st.write(f"**Nama Ilmiah:** {info['Nama Ilmiah']}")
-                            st.write(f"**Ciri-ciri:** {info['Ciri-ciri']}")
-                            st.write(f"**Habitat Asli:** {info['Habitat']}")
-                            st.write(f"**Kegunaan:** {info['Kegunaan']}")
-                else:
-                    st.error("Gambar tidak dikenali. Silakan gunakan gambar lain.")
