@@ -186,6 +186,31 @@ elif app_mode == "Informasi Web":
 
 
 # Halaman Statistik
+elif app_mode == "Riwayat Deteksi":
+    st.image("image/riwayat_deteksi.png",  use_column_width=True)
+    stats = load_statistics()
+
+    if stats:
+        # Convert ke list of dict agar aman diproses DataFrame
+        list_stats = [
+            {"Nama Ikan": ikan, "Jumlah Deteksi": jumlah}
+            for ikan, jumlah in stats.items()
+        ]
+        df_stats = pd.DataFrame(list_stats)
+        df_stats = df_stats.sort_values(by="Jumlah Deteksi", ascending=False).reset_index(drop=True)
+        df_stats.index = df_stats.index + 1
+
+        st.bar_chart(df_stats.set_index("Nama Ikan"))  # agar bar chart tetap bisa
+        st.markdown("### Rincian Deteksi:")
+        st.table(df_stats)  # bisa juga st.dataframe(df_stats, use_container_width=True)
+
+        if st.button("🔄 Reset Deteksi"):
+            save_statistics({})
+            st.success("Deteksi berhasil direset.")
+    else:
+        st.info("Anda belum melakukan deteksi gambar jenis ikan air tawar.")
+
+# Halaman Deteksi
 elif app_mode == "Fish Recognition":
     st.image("image/fish_recog.png",  use_column_width=True)
 
