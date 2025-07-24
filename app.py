@@ -233,7 +233,7 @@ elif app_mode == "Fish Recognition":
             # Pastikan pengecekan string
             if fish_name == "Model tidak mempelajari gambar ini":
                 st.error("Maaf, Gambar bukan ikan air tawar atau Model tidak mempelajari gambar ini.")
-            elif confidence <= 0.6:
+            elif confidence <= 0.5:
                 st.error("Maaf, Gambar bukan ikan air tawar atau Model tidak mempelajari gambar ini.")
             else:
                 st.success(f"Model memprediksi ini adalah ikan **{fish_name}**")
