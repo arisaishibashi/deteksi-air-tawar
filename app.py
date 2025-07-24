@@ -42,7 +42,7 @@ set_background("image/background.png", "image/sidebar.png")
 
 # Load model CNN
 def load_model():
-    return tf.keras.models.load_model("model_07_juli.h5")
+    return tf.keras.models.load_model("model_24juli.h5")
 
 model = load_model()
 
@@ -63,7 +63,7 @@ def model_prediction(image_data):
 # Daftar nama kelas ikan
 class_name = [
     'Bandeng', 'Bawal', 'Cupang', 'Gabus', 'Gurame',
-    'Ikan Mas', 'Kakap', 'Lele', 'Model tidak mempelajari gambar ini', 'Nila', 'Patin'
+    'Ikan Mas', 'Kakap', 'Lele', 'Mujair', 'Model tidak mempelajari gambar ini', 'Nila', 'Patin'
 ]
 
 # Informasi edukatif
