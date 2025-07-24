@@ -62,9 +62,8 @@ def model_prediction(image_data):
 
 # Daftar nama kelas ikan
 class_name = [
-    'Lele', 'Kakap', 'Ikan Mas', 'Bandeng', 'Bawal', 
-    'Model tidak mempelajari gambar ini', 'Gurame', 
-    'Cupang', 'Nila', 'Gabus', 'Mujair', 'Patin'
+     ['Bandeng', 'Bawal', 'Cupang', 'Gabus', 'Gurame', 'Ikan Mas', 
+      'Kakap', 'Lele','Model tidak mempelajari gambar ini', 'Mujair', 'Nila', 'Patin']
 ]
 
 # Informasi edukatif
