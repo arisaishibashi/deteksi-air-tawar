@@ -233,8 +233,6 @@ elif app_mode == "Fish Recognition":
             # Pastikan pengecekan string
             if fish_name == "Model tidak mempelajari gambar ini":
                 st.error("Maaf, Gambar bukan ikan air tawar atau Model tidak mempelajari gambar ini.")
-            elif confidence <= 0.5:
-                st.error("Maaf, Gambar bukan ikan air tawar atau Model tidak mempelajari gambar ini.")
             else:
                 st.success(f"Model memprediksi ini adalah ikan **{fish_name}**")
                 update_statistics(fish_name)
@@ -247,4 +245,5 @@ elif app_mode == "Fish Recognition":
                     st.write(f"**Kegunaan:** {info['Kegunaan']}")
                 else:
                     st.info("Informasi detail belum tersedia.")
+
 
