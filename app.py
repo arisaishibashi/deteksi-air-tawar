@@ -43,10 +43,26 @@ def set_background(main_bg_file, sidebar_bg_file):
 set_background("image/background.png", "image/sidebar.png")
 
 # Load model CNN
+@st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("model_fixed.keras")
+    base_model = MobileNetV2(
+        input_shape=(224,224,3),
+        include_top=False,
+        weights=None
+    )
 
-model = load_model()
+    model = tf.keras.Sequential([
+        tf.keras.Input(shape=(224,224,3)),
+        base_model,
+        tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Dropout(0.3),
+        tf.keras.layers.Dense(128, activation="relu"),
+        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(12, activation="softmax")
+    ])
+
+    model.load_weights("model.fixed.h5")
+    return model
 
 
 # Prediksi
