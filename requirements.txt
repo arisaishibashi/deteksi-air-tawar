@@ -1,6 +1,5 @@
 streamlit
 tensorflow==2.20.0
-tf-keras
 numpy==1.26.4
 pandas>=1.5
 altair
