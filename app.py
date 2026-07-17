@@ -1,16 +1,18 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_USE_LEGACY_KERAS'] = '1'   # <-- tambahkan baris ini
+
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 
 import base64
-import streamlit as st # type: ignore
-import tensorflow as tf # type: ignore
-import numpy as np # type: ignore
-from PIL import Image # type: ignore
+import streamlit as st
+import tensorflow as tf
+import numpy as np
+from PIL import Image
 import json
-import pandas as pd # type: ignore
+import pandas as pd
 
 def get_base64(file_path):
     with open(file_path, "rb") as f:
