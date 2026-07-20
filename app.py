@@ -64,6 +64,8 @@ def load_model():
     model.load_weights("model_24juli.h5")
     return model
 
+model = load_model() 
+
 
 # Prediksi
 def model_prediction(image_data):
