@@ -13,6 +13,7 @@ import numpy as np
 from PIL import Image
 import json
 import pandas as pd
+from tensorflow.keras.applications import MobileNetV2
 
 def get_base64(file_path):
     with open(file_path, "rb") as f:
@@ -64,8 +65,7 @@ def load_model():
     model.load_weights("model_24juli.h5")
     return model
 
-   
-
+model = load_model()   
 
 # Prediksi
 def model_prediction(image_data):
