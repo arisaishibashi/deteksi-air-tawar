@@ -9,11 +9,12 @@ warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 import base64
 import streamlit as st
 import tensorflow as tf
+from tensorflow.keras.applications import MobileNetV2
 import numpy as np
 from PIL import Image
 import json
 import pandas as pd
-from tensorflow.keras.applications import MobileNetV2
+
 
 def get_base64(file_path):
     with open(file_path, "rb") as f:
