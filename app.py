@@ -61,7 +61,7 @@ def load_model():
         tf.keras.layers.Dense(12, activation="softmax")
     ])
 
-    model.load_weights("model.fixed.h5")
+    model.load_weights("model_24juli.h5")
     return model
 
 
